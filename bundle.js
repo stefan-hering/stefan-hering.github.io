@@ -10145,8 +10145,8 @@ exports.Cube = Cube;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const playground_1 = __webpack_require__(89);
-__webpack_require__(207);
-__webpack_require__(208);
+__webpack_require__(205);
+__webpack_require__(206);
 let settings = {
     width: "3",
     height: "3",
@@ -10167,7 +10167,7 @@ let samples = {
             width: "3",
             height: "3",
             startX: "1",
-            startY: "0",
+            startY: "1",
             params: "[1,100]"
         }
     },
@@ -10204,9 +10204,9 @@ const React = __webpack_require__(25);
 const ReactDOM = __webpack_require__(59);
 const g = __webpack_require__(24);
 const menu_1 = __webpack_require__(191);
-const editor_1 = __webpack_require__(194);
-const console_1 = __webpack_require__(199);
-const util_1 = __webpack_require__(200);
+const editor_1 = __webpack_require__(192);
+const console_1 = __webpack_require__(197);
+const util_1 = __webpack_require__(198);
 class GridPlayground extends React.Component {
     constructor(props) {
         super(props);
@@ -10276,7 +10276,7 @@ class GridPlayground extends React.Component {
             }
             this.console.clear();
             try {
-                util_1.compileAndExecute(grid, new g.Position(parseInt(this.currentSettings["startX"], 10), parseInt(this.currentSettings["startY"], 10)), this.console, eval(this.currentSettings["params"]));
+                util_1.compileAndExecute(grid, new g.Position(parseInt(this.currentSettings["startX"], 10), parseInt(this.currentSettings["startY"], 10)), this.console, eval(this.currentSettings["params"]), true);
             }
             catch (e) {
                 this.console.out(e.message);
@@ -23130,7 +23130,7 @@ class Menu extends React.Component {
         };
         this.openPopup = (mode) => {
             ReactDOM.render(React.createElement(FilesPopup, { mode: mode, save: this.props.save, load: this.props.load }), document.getElementById("modal"));
-            $("#modal").children(".modal").modal();
+            window.$("#modal").children(".modal").modal();
         };
         this.setValues = (values) => {
             this.setState({
@@ -23184,17 +23184,15 @@ exports.Menu = Menu;
 
 
 /***/ }),
-/* 192 */,
-/* 193 */,
-/* 194 */
+/* 192 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __webpack_require__(25);
-let ace = __webpack_require__(195);
-__webpack_require__(198);
+let ace = __webpack_require__(193);
+__webpack_require__(196);
 class EditorGrid extends React.Component {
     constructor() {
         super(...arguments);
@@ -23237,7 +23235,7 @@ exports.EditorGrid = EditorGrid;
 
 
 /***/ }),
-/* 195 */
+/* 193 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* ***** BEGIN LICENSE BLOCK *****
@@ -40037,7 +40035,7 @@ var WorkerClient = function(topLevelNamespaces, mod, classname, workerUrl) {
 
     try {
             var workerSrc = mod.src;
-    var Blob = __webpack_require__(196);
+    var Blob = __webpack_require__(194);
     var blob = new Blob([ workerSrc ], { type: 'application/javascript' });
     var blobUrl = (window.URL || window.webkitURL).createObjectURL(blob);
 
@@ -42318,7 +42316,7 @@ exports.version = "1.2.6";
 module.exports = window.ace.acequire("ace/ace");
 
 /***/ }),
-/* 196 */
+/* 194 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {module.exports = get_blob()
@@ -42350,10 +42348,10 @@ function get_blob() {
   }
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(197)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(195)))
 
 /***/ }),
-/* 197 */
+/* 195 */
 /***/ (function(module, exports) {
 
 var g;
@@ -42380,7 +42378,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 198 */
+/* 196 */
 /***/ (function(module, exports) {
 
 ace.define("ace/theme/dreamweaver",["require","exports","module","ace/lib/dom"], function(acequire, exports, module) {
@@ -42527,7 +42525,7 @@ dom.importCssString(exports.cssText, exports.cssClass);
 
 
 /***/ }),
-/* 199 */
+/* 197 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42550,8 +42548,15 @@ class Console extends React.Component {
         this.in = () => {
             return "";
         };
+        this.kill = false;
         this.clear = () => {
             this.lines = [];
+        };
+        this.toggleKill = () => {
+            this.kill = true;
+            setTimeout(() => {
+                this.kill = false;
+            }, 100);
         };
     }
     render() {
@@ -42564,22 +42569,24 @@ class Console extends React.Component {
         else {
             output = "Grid console";
         }
-        return (React.createElement("div", { className: "console" }, output));
+        return (React.createElement("div", { className: "console" },
+            React.createElement("span", { className: "grid-kill", onClick: this.toggleKill }, "X"),
+            React.createElement("div", { className: "console-output" }, output)));
     }
 }
 exports.Console = Console;
 
 
 /***/ }),
-/* 200 */
+/* 198 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const runtime_1 = __webpack_require__(201);
-const parser_1 = __webpack_require__(202);
-const analyzer_1 = __webpack_require__(206);
+const runtime_1 = __webpack_require__(199);
+const parser_1 = __webpack_require__(200);
+const analyzer_1 = __webpack_require__(204);
 const cube_1 = __webpack_require__(86);
 var readline = __webpack_require__(87);
 class ConsoleIO {
@@ -42590,10 +42597,11 @@ class ConsoleIO {
         this.out = (value) => {
             console.log(value);
         };
+        this.kill = false;
     }
 }
 exports.ConsoleIO = ConsoleIO;
-let compileAndExecute = (grid, start, io, params) => {
+let compileAndExecute = (grid, start, io, params, runAsync = false) => {
     let parsedGrid = parser_1.parseWholeGrid(grid);
     new analyzer_1.Analyzer(parsedGrid).analyzeGrid();
     for (let i = 0; i < params.length; i++) {
@@ -42605,17 +42613,25 @@ let compileAndExecute = (grid, start, io, params) => {
             params[i] = cube;
         }
     }
-    runtime_1.executeGrid(parsedGrid, start, io, params);
+    runtime_1.executeGrid(parsedGrid, start, io, params, runAsync);
 };
 exports.compileAndExecute = compileAndExecute;
 
 
 /***/ }),
-/* 201 */
+/* 199 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const g = __webpack_require__(24);
 const cube_1 = __webpack_require__(86);
@@ -42732,7 +42748,7 @@ class EndError extends RuntimeError {
         this.type = "exit";
     }
 }
-let executeGrid = (grid, start, io, params) => {
+let executeGrid = (grid, start, io, params, runAsync = false) => __awaiter(this, void 0, void 0, function* () {
     let cell = grid.cellAt(start);
     if (cell.type !== g.CellType.REGULAR) {
         throw new RuntimeError("Trying to start at empty cell");
@@ -42750,6 +42766,12 @@ let executeGrid = (grid, start, io, params) => {
     }
     while (true) {
         try {
+            if (io.kill) {
+                break;
+            }
+            if (runAsync) {
+                yield new Promise(_ => setTimeout(_, 1));
+            }
             let executor = new CellExecutor(io);
             let executionResult = executor.executeCell(cell, currentParams);
             currentParams = executionResult[1];
@@ -42769,19 +42791,19 @@ let executeGrid = (grid, start, io, params) => {
             break;
         }
     }
-};
+});
 exports.executeGrid = executeGrid;
 
 
 /***/ }),
-/* 202 */
+/* 200 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const g = __webpack_require__(24);
-const jp = __webpack_require__(203);
+const jp = __webpack_require__(201);
 class Parser {
     constructor() {
         this.jisonParser = new jp.Parser;
@@ -42974,7 +42996,7 @@ exports.parseGridCellToJison = parseGridCellToJison;
 
 
 /***/ }),
-/* 203 */
+/* 201 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process, module) {/* parser generated by jison 0.4.17 */
@@ -43783,17 +43805,17 @@ exports.main = function commonjsMain(args) {
         console.log('Usage: '+args[0]+' FILE');
         process.exit(1);
     }
-    var source = __webpack_require__(87).readFileSync(__webpack_require__(205).normalize(args[1]), "utf8");
+    var source = __webpack_require__(87).readFileSync(__webpack_require__(203).normalize(args[1]), "utf8");
     return exports.parser.parse(source);
 };
 if (typeof module !== 'undefined' && __webpack_require__.c[__webpack_require__.s] === module) {
   exports.main(process.argv.slice(1));
 }
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(204)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(202)(module)))
 
 /***/ }),
-/* 204 */
+/* 202 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -43821,7 +43843,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 205 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -44052,7 +44074,7 @@ var substr = 'ab'.substr(-1) === 'b'
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 206 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44128,19 +44150,19 @@ class AnalyzerError {
 
 
 /***/ }),
-/* 207 */
+/* 205 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "grid-editor.html";
 
 /***/ }),
-/* 208 */
+/* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(209);
+var content = __webpack_require__(207);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -44148,7 +44170,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(211)(content, options);
+var update = __webpack_require__(209)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -44165,21 +44187,21 @@ if(false) {
 }
 
 /***/ }),
-/* 209 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(210)(undefined);
+exports = module.exports = __webpack_require__(208)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".editor {\n  min-height: 14rem;\n  margin: 0.5rem 0.025rem; }\n  .editor-container {\n    min-width: 14rem; }\n  .editor-grid-row {\n    border-bottom: 1px solid #A3C0FF; }\n\n.grid-menu {\n  background-color: #A3C0FF; }\n\n.grid-settings {\n  margin: 0.5rem 0.025rem; }\n  .grid-settings--run {\n    text-align: right; }\n  .grid-settings input {\n    margin: 0 .25rem; }\n\n.grid-button {\n  margin: 0 .5rem; }\n\n.console {\n  max-height: 20rem;\n  overflow-y: scroll; }\n  .console-line {\n    margin: 0 1rem;\n    display: block; }\n\ninput[type=number] {\n  max-width: 60px;\n  text-align: center; }\n\n@media screen and (min-width: 992px) {\n  .console {\n    max-height: 42rem; } }\n", ""]);
+exports.push([module.i, ".editor {\n  min-height: 14rem;\n  margin: 0.5rem 0.025rem; }\n  .editor-container {\n    min-width: 14rem; }\n  .editor-grid-row {\n    border-bottom: 1px solid #A3C0FF; }\n\n.grid-menu {\n  background-color: #A3C0FF; }\n\n.grid-settings {\n  margin: 0.5rem 0.025rem; }\n  .grid-settings--run {\n    text-align: right; }\n  .grid-settings input {\n    margin: 0 .25rem; }\n\n.grid-button {\n  margin: 0 .5rem; }\n\n.console {\n  position: relative; }\n  .console-output {\n    min-height: 2rem;\n    max-height: 50rem;\n    overflow-y: scroll; }\n  .console-line {\n    margin: 0 1rem;\n    display: block; }\n\n.grid-kill {\n  position: absolute;\n  top: .5rem;\n  right: 2rem;\n  color: #DC0313;\n  font-weight: bold; }\n\n.grid-help {\n  color: white; }\n\ninput[type=number] {\n  max-width: 60px;\n  text-align: center; }\n\n@media screen and (min-width: 992px) {\n  .console {\n    max-height: 42rem; } }\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 210 */
+/* 208 */
 /***/ (function(module, exports) {
 
 /*
@@ -44261,7 +44283,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 211 */
+/* 209 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -44307,7 +44329,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(212);
+var	fixUrls = __webpack_require__(210);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -44620,7 +44642,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 212 */
+/* 210 */
 /***/ (function(module, exports) {
 
 
