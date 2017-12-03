@@ -10276,7 +10276,7 @@ class GridPlayground extends React.Component {
             }
             this.console.clear();
             try {
-                util_1.compileAndExecute(grid, new g.Position(parseInt(this.currentSettings["startX"], 10), parseInt(this.currentSettings["startY"], 10)), this.console, eval(this.currentSettings["params"]), true);
+                util_1.compileAndExecute(grid, new g.Position(parseInt(this.currentSettings["startY"], 10), parseInt(this.currentSettings["startX"], 10)), this.console, eval(this.currentSettings["params"]), true);
             }
             catch (e) {
                 this.console.out(e.message);
