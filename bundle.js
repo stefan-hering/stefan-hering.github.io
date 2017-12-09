@@ -10262,7 +10262,9 @@ class GridPlayground extends React.Component {
             let loadedGrid = JSON.parse(localStorage.getItem("grid-" + fileName));
             this.currentSettings = loadedGrid.settings;
             this.gridResize();
-            this.setValues(loadedGrid.cells);
+            setTimeout(() => {
+                this.setValues(loadedGrid.cells);
+            }, 100);
         };
         this.execute = () => {
             let grid = [];
